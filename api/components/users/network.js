@@ -1,20 +1,66 @@
-const express = require("express");
+import express from "express";
 
-const response = require("../../../network/response");
-const controller = require("./controller.js");
+import * as response from "../../../network/response.js";
+import controller from "./controller.js";
+
+const list = async (req, res) => {
+  try {
+    const data = await controller.list();
+    response.success({
+      req,
+      res,
+      message: "",
+      data,
+      status: 200,
+    });
+  } catch (error) {
+    response.error({
+      req,
+      res,
+      message: error.message,
+    });
+  }
+};
+const get = async (req, res) => {
+  try {
+    const data = await controller.get(req.params.id);
+    response.success({
+      req,
+      res,
+      message: "",
+      data,
+      status: 200,
+    });
+  } catch (error) {
+    response.error({
+      req,
+      res,
+      message: error.message,
+    });
+  }
+};
+const upsert = async (req, res) => {
+  try {
+    const data = await controller.upsert(req.body);
+    response.success({
+      req,
+      res,
+      message: "",
+      data,
+      status: 200,
+    });
+  } catch (error) {
+    response.error({
+      req,
+      res,
+      message: error.message,
+    });
+  }
+};
 
 const router = express.Router();
+router.get("/", list);
+router.post("/", upsert);
+router.get("/:id", get);
 
-router.get("/", (req, res) => {
-  const data = controller.list();
-  console.log("data", data);
-  response.success({
-    req,
-    res,
-    message: "",
-    data,
-    status: 200,
-  });
-});
-
-module.exports = router;
+export default router;

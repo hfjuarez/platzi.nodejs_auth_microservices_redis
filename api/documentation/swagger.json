@@ -1,0 +1,99 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Platzi - Curso de Node.js - Autenticación, Microservicios y Redis",
+    "description": ":earning swagger",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost;3000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "some desc"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "tags": ["users"],
+        "summary": "post create user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BodyUsersPost"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OKUsersPost"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "(Unauthorized) - text"
+      },
+      "NotFound": {
+        "description": "(NotFound) - text"
+      },
+      "BadRequest": {
+        "description": "(NotFound) - text"
+      }
+    },
+    "parameters": {
+      "token": {
+        "in": "header",
+        "name": "token",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "BodyUsersPost": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Some desc of name"
+          }
+        }
+      },
+      "OKUsersPost": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Response with User ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Response with User name"
+          }
+        }
+      }
+    }
+  }
+}

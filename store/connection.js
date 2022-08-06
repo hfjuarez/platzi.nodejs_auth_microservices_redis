@@ -1,27 +1,32 @@
-const db = require("./dummy.js");
+import db from "./dummy.js";
+import { exits } from "../helpers/index.js";
 
-const connection = {};
+class Connection {
+  constructor(db) {
+    this.db = db;
+  }
 
-const exits = (val) => !val;
+  list = async ({ table = null }) => {
+    if (exits(table)) new Error("Table is empty");
+    return this.db[table];
+  };
+  get = async ({ table = null, id = null, key = "id" }) => {
+    if (exits(table)) throw new Error("Table is empty");
+    if (exits(id)) throw new Error("ID is empty");
+    const collection = await this.db[table];
+    return collection.filter((el) => el[key] === id)[0];
+  };
+  upsert = ({ table, data }) => {
+    if (exits(table)) throw new Error("Table is empty");
+    this.db[table].push(data);
+  };
+  remove = ({ table, id }) => {
+    if (exits(table)) throw new Error("Table is empty");
+    if (exits(id)) throw new Error("ID is empty");
+    return true;
+  };
+}
 
-connection.list = ({ table = null }) => {
-  if (exits(table)) throw new Error("Table is empty");
-  return db[table];
-};
-connection.get = ({ table = null, id = null, key = "id" }) => {
-  if (exits(table)) throw new Error("Table is empty");
-  if (exits(id)) throw new Error("ID is empty");
-  let collection = list(db[table]);
-  return collection.filter((i) => i[key] === id);
-};
-connection.upsert = ({ table, data }) => {
-  if (exits(table)) throw new Error("Table is empty");
-  db[tabla].push(data);
-};
-connection.remove = ({ table, id }) => {
-  if (exits(table)) throw new Error("Table is empty");
-  if (exits(id)) throw new Error("ID is empty");
-  return true;
-};
+const instance = new Connection(db);
 
-module.exports = connection;
+export default Object.freeze(instance);

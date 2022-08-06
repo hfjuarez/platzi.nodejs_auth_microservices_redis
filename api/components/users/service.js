@@ -1,8 +1,22 @@
-const store = require("../../../store/connection");
-const TABLE = "users";
+import { nanoid } from "nanoid";
+import store from "../../../store/connection.js";
 
-const service = {};
+class Service {
+  constructor(store, table) {
+    this.TABLE = table;
+    this.store = store;
+  }
+  list = () => this.store.list({ table: this.TABLE });
+  get = (id) => this.store.get({ table: this.TABLE, id, key: "id" });
+  upsert = ({ name = null }) => {
+    if (!name) throw new Error("Name is empty");
+    return this.store.upsert({
+      table: this.TABLE,
+      data: { id: nanoid(), name },
+    });
+  };
+}
 
-service.list = () => store.list({ table: TABLE });
+const instance = new Service(store, "users");
 
-module.exports = service;
+export default Object.freeze(instance);

@@ -1,5 +1,5 @@
 const db = {
-  users: [{ id: 1, name: "Carlos" }],
+  users: [{ id: "fsBO4OLPqW2PkqgplemC2", name: "Carlos" }],
 };
 
-module.exports = db;
+export default db;

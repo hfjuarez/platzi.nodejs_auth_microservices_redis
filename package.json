@@ -1,5 +1,6 @@
 {
   "name": "platzi.nodejs_auth_microservices_redis",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +10,8 @@
   "author": "Hernan Fabrica",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "nanoid": "^4.0.0",
+    "swagger-ui-express": "^4.5.0"
   }
 }

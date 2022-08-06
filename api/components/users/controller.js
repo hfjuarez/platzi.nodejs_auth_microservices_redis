@@ -1,7 +1,14 @@
-const service = require("./service.js");
+import service from "./service.js";
 
-const controller = {};
+class Controller {
+  constructor(injectedService) {
+    this.service = injectedService;
+  }
+  list = () => this.service.list();
+  get = (id) => this.service.get(id);
+  upsert = (data) => this.service.upsert(data);
+}
 
-controller.list = () => service.list();
+const instance = new Controller(service);
 
-module.exports = controller;
+export default Object.freeze(instance);

@@ -1,4 +1,10 @@
-exports.success = ({ req, res, message = "", data = {}, status = 200 }) => {
+export const success = ({
+  req,
+  res,
+  message = "",
+  data = {},
+  status = 200,
+}) => {
   res.status(status).send({
     error: false,
     status,
@@ -6,8 +12,7 @@ exports.success = ({ req, res, message = "", data = {}, status = 200 }) => {
     body: data,
   });
 };
-
-exports.error = ({
+export const error = ({
   req,
   res,
   message = "Internal server error",
