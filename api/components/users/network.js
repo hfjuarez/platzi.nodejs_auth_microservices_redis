@@ -39,9 +39,27 @@ const get = async (req, res) => {
     });
   }
 };
-const upsert = async (req, res) => {
+const create = async (req, res) => {
   try {
-    const data = await controller.upsert(req.body);
+    const data = await controller.create(req.body);
+    response.success({
+      req,
+      res,
+      message: "",
+      data,
+      status: 200,
+    });
+  } catch (error) {
+    response.error({
+      req,
+      res,
+      message: error.message,
+    });
+  }
+};
+const update = async (req, res) => {
+  try {
+    const data = await controller.update(req.params.id, req.body);
     response.success({
       req,
       res,
@@ -60,7 +78,8 @@ const upsert = async (req, res) => {
 
 const router = express.Router();
 router.get("/", list);
-router.post("/", upsert);
+router.post("/", create);
 router.get("/:id", get);
+router.put("/:id", update);
 
 export default router;

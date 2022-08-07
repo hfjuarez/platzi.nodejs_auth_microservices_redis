@@ -6,7 +6,8 @@ class Controller {
   }
   list = () => this.service.list();
   get = (id) => this.service.get(id);
-  upsert = (data) => this.service.upsert(data);
+  create = (data) => this.service.create(data);
+  update = (id, data) => this.service.update(id, data);
 }
 
 const instance = new Controller(service);

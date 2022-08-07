@@ -10,19 +10,29 @@ class Connection {
     if (exits(table)) new Error("Table is empty");
     return this.db[table];
   };
-  get = async ({ table = null, id = null, key = "id" }) => {
+  get = async ({ table = null, id = null, keyName = "id" }) => {
     if (exits(table)) throw new Error("Table is empty");
-    if (exits(id)) throw new Error("ID is empty");
+    if (exits(id)) throw new Error(`${keyName.toUpperCase()} is empty`);
     const collection = await this.db[table];
-    return collection.filter((el) => el[key] === id)[0];
+    return collection.filter((el) => el[keyName] === id)[0];
   };
-  upsert = ({ table, data }) => {
+  create = ({ table, data }) => {
     if (exits(table)) throw new Error("Table is empty");
     this.db[table].push(data);
   };
-  remove = ({ table, id }) => {
+  update = ({ table, data, id, keyName = "id" }) => {
     if (exits(table)) throw new Error("Table is empty");
-    if (exits(id)) throw new Error("ID is empty");
+    if (exits(id)) throw new Error(`${keyName.toUpperCase()} is empty`);
+    const index = this.db[table].findIndex((el) => el[keyName] === id);
+    const keys = Object.keys(this.db[table][index]);
+    keys.forEach((key) => {
+      if (data[key] && data[key] !== this.db[table][index][key])
+        this.db[table][index][key] = data[key];
+    });
+  };
+  remove = ({ table, id, keyName = "id" }) => {
+    if (exits(table)) throw new Error("Table is empty");
+    if (exits(id)) throw new Error(`${keyName.toUpperCase()} is empty`);
     return true;
   };
 }

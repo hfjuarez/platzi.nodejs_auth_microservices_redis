@@ -8,7 +8,7 @@ import config from "../config.js";
 import { createRequire } from "module"; // Bring in the ability to create the 'require' method
 const require = createRequire(import.meta.url); // construct the require method
 const swaggerDocument = require("./documentation/swagger.json");
-import users from "./components/users/network.js";
+import users from "./components/users/index.js";
 
 const app = express();
 app.use(express.json());
