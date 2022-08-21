@@ -1,1 +1,1 @@
-export const exits = (val) => !val;
+export const exists = (val) => !!val;

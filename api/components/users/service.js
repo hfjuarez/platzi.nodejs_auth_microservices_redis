@@ -1,49 +1,44 @@
 import { nanoid } from "nanoid";
 import store from "../../../store/connection.js";
+import authController from "../auth/controller.js";
 
 class Service {
-  constructor(store, table) {
-    this.TABLE = table;
+  constructor(store, options = {}) {
     this.store = store;
+    this.auth = options?.auth;
   }
-  list = () => this.store.list({ table: this.TABLE });
-  get = (id) => this.store.get({ table: this.TABLE, id, key: "id" });
+  list = () => this.store.list();
+  get = (id) => this.store.get({ id, keyName: "id" });
   create = async (body) => {
     if (!body.name) throw new Error("Name is empty");
     if (!body.username) throw new Error("Username is empty");
     if (!body.password) throw new Error("Password is empty");
     const user = {
-      id: body.id,
+      id: nanoid(),
       name: body.name,
       username: body.username,
     };
-    if (body.password || user.username) {
-      // await auth.upsert({
-      //   id: user.id,
-      //   username: user.username,
-      //   password: body.password,
-      // });
-    }
-    user.id = nanoid();
-    return this.store.create({
-      table: this.TABLE,
+    await this.auth.create({
+      id: user.id,
+      username: user.username,
+      password: body.password,
+    });
+    return await this.store.create({
       data: user,
     });
   };
   update = async (id, body) => {
-    if (!id && this.get(id)) throw new Error("ID doesn't exits");
+    if (!id && this.get(id)) throw new Error("ID doesn't exists");
     const user = {
       name: body.name,
-      username: body.username,
     };
     return this.store.update({
-      table: this.TABLE,
       id,
       data: user,
     });
   };
 }
 
-const instance = new Service(store, "users");
+const instance = new Service(store("users"), { auth: authController });
 
 export default Object.freeze(instance);
