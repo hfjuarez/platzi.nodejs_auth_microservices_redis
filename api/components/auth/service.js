@@ -9,7 +9,6 @@ class Service {
   constructor(store) {
     this.store = store;
   }
-  list = () => this.store.list();
   validate = async ({ token }) => {
     const decoded = verify(token);
     const auth = await this.get(decoded.username, "username");
