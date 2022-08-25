@@ -2,15 +2,18 @@ import store from "../../../store/connection.js";
 import { exists } from "../../../helpers/index.js";
 import { sign, verify } from "../../../auth/index.js";
 import { nanoid } from "nanoid";
+import { hash, compare } from "bcrypt";
 const week = 60;
 
 class Service {
   constructor(store) {
     this.store = store;
   }
+  list = () => this.store.list();
   validate = async ({ token }) => {
     const decoded = verify(token);
     const auth = await this.get(decoded.username, "username");
+    if (!auth) throw new Error("Not authenticated");
     return auth.session === decoded.session;
   };
   login = async ({ username, password }) => {
@@ -18,7 +21,8 @@ class Service {
     if (!exists(password)) throw new Error("Password is empty");
     const auth = await this.get(username, "username");
     if (
-      verify(auth.password) === `${password}${auth.salt}` &&
+      !!auth &&
+      (await compare(`${password}${auth.salt}`, auth.password)) &&
       auth?.username === username
     ) {
       const session = nanoid();
@@ -37,33 +41,13 @@ class Service {
     const auth = {
       id: data.id,
       username: data.username,
-      password: sign(`${data.password}${salt}`),
+      password: await hash(`${data.password}${salt}`, 7),
       session: null,
       salt,
     };
     return await this.store.create({
       data: auth,
     });
-  };
-  update = async (user, actualUsername, actualPassword) => {
-    if (!exists(user.id)) throw new Error("ID is empty");
-    const auth = await this.get(user.id);
-    if (this.validate(actualUsername, actualPassword)) {
-      let hasToUpdate = false;
-      const newAuthData = { ...auth };
-      if (actualUsername !== user.username) {
-        hasToUpdate = true;
-        newAuthData.username = user.username;
-      }
-      if (actualPassword !== user.password) {
-        hasToUpdate = true;
-        newAuthData.password = user.password;
-      }
-      if (hasToUpdate) await this.store.update({ id, data: newAuthData });
-      return true;
-    } else {
-      throw new Error("Not authenticated");
-    }
   };
 }
 

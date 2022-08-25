@@ -3,6 +3,24 @@ import express from "express";
 import * as response from "../../../network/response.js";
 import controller from "./controller.js";
 
+const list = async (req, res) => {
+  try {
+    const data = await controller.list();
+    response.success({
+      req,
+      res,
+      message: "",
+      data,
+      status: 200,
+    });
+  } catch (error) {
+    response.error({
+      req,
+      res,
+      message: error.message,
+    });
+  }
+};
 const login = async (req, res) => {
   try {
     const token = await controller.login(req.body);
@@ -44,6 +62,7 @@ const validate = async (req, res) => {
 };
 
 const router = express.Router();
+router.get("/", list);
 router.post("/login", login);
 router.post("/validate", validate);
 

@@ -18,6 +18,7 @@ class Connection {
   };
   create = ({ data }) => {
     this.db[this.table].push(data);
+    return data;
   };
   update = ({ data, id, keyName = "id" }) => {
     if (!exists(id)) throw new Error(`${keyName.toUpperCase()} is empty`);
