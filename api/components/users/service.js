@@ -1,6 +1,6 @@
-import { nanoid } from "nanoid";
-import store from "../../../store/connection.js";
-import authController from "../auth/controller.js";
+import { nanoid } from 'nanoid';
+import store from '../../../store/connection.js';
+import authController from '../auth/controller.js';
 
 class Service {
   constructor(store, options = {}) {
@@ -8,11 +8,11 @@ class Service {
     this.auth = options?.auth;
   }
   list = () => this.store.list();
-  get = (id) => this.store.get({ id, keyName: "id" });
+  get = (id) => this.store.get({ id, keyName: 'id' });
   create = async (body) => {
-    if (!body.name) throw new Error("Name is empty");
-    if (!body.username) throw new Error("Username is empty");
-    if (!body.password) throw new Error("Password is empty");
+    if (!body.name) throw new Error('Name is empty');
+    if (!body.username) throw new Error('Username is empty');
+    if (!body.password) throw new Error('Password is empty');
     const user = {
       id: nanoid(),
       name: body.name,
@@ -39,6 +39,6 @@ class Service {
   };
 }
 
-const instance = new Service(store("users"), { auth: authController });
+const instance = new Service(store('users'), { auth: authController });
 
 export default Object.freeze(instance);

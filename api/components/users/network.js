@@ -1,13 +1,14 @@
-import express from "express";
+import express from 'express';
 
-import * as response from "../../../network/response.js";
-import controller from "./controller.js";
+import * as response from '../../../network/response.js';
+import controller from './controller.js';
+import middleware from './middleware.js';
 
 const router = express.Router();
-router.get("/", list);
-router.post("/", create);
-router.get("/:id", get);
-router.put("/:id", update);
+router.get('/', list);
+router.post('/', create);
+router.get('/:id', get);
+router.put('/:id', middleware.update, update);
 
 async function list(req, res) {
   try {
@@ -15,7 +16,7 @@ async function list(req, res) {
     response.success({
       req,
       res,
-      message: "",
+      message: '',
       data,
       status: 200,
     });
@@ -33,7 +34,7 @@ async function get(req, res) {
     response.success({
       req,
       res,
-      message: "",
+      message: '',
       data,
       status: 200,
     });
@@ -51,7 +52,7 @@ async function create(req, res) {
     response.success({
       req,
       res,
-      message: "",
+      message: '',
       data,
       status: 200,
     });
@@ -69,7 +70,7 @@ async function update(req, res) {
     response.success({
       req,
       res,
-      message: "",
+      message: '',
       data,
       status: 200,
     });

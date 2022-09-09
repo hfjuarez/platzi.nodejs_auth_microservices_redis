@@ -1,11 +1,10 @@
-import express from "express";
+import express from 'express';
 
-import * as response from "../../../network/response.js";
-import controller from "./controller.js";
+import * as response from '../../../network/response.js';
+import controller from './controller.js';
 
 const router = express.Router();
-router.post("/login", login);
-router.post("/validate", validate);
+router.post('/login', login);
 
 async function login(req, res) {
   try {
@@ -13,7 +12,7 @@ async function login(req, res) {
     response.success({
       req,
       res,
-      message: "",
+      message: '',
       data: token,
       status: 200,
     });
@@ -22,27 +21,7 @@ async function login(req, res) {
       req,
       res,
       message: error.message,
-      status: error.message === "Not authenticated" ? 401 : 500,
-    });
-  }
-}
-
-async function validate(req, res) {
-  try {
-    const data = await controller.validate(req.body);
-    response.success({
-      req,
-      res,
-      message: "",
-      data: data,
-      status: 200,
-    });
-  } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-      status: error.message === "Not authenticated" ? 401 : 500,
+      status: error.message === 'Not authenticated' ? 401 : 500,
     });
   }
 }

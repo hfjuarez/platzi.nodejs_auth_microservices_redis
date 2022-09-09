@@ -1,0 +1,8 @@
+{
+  "plugins": ["prettier"],
+  "parser": "babel-eslint",
+  "extends": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}
