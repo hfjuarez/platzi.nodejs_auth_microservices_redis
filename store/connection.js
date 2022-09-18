@@ -1,5 +1,5 @@
 import db from "./dummy.js";
-import { exists } from "../helpers/index.js";
+import { exists } from "../utils/helpers/index.js";
 
 class Connection {
   constructor(db, table) {

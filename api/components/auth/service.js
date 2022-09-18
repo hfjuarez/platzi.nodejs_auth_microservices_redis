@@ -1,6 +1,7 @@
 import store from '../../../store/connection.js';
-import { exists } from '../../../helpers/index.js';
-import { sign, verify } from '../../../auth/index.js';
+import { exists } from '../../../utils/helpers/index.js';
+import { sign } from '../../../auth/index.js';
+import { HandleError, Ok } from '../../../utils/helpers/results.js';
 import { nanoid } from 'nanoid';
 import { hash, compare } from 'bcrypt';
 const week = 60;
@@ -10,8 +11,10 @@ class Service {
     this.store = store;
   }
   login = async ({ username, password }) => {
-    if (!exists(username)) throw new Error('Username is empty');
-    if (!exists(password)) throw new Error('Password is empty');
+    if (!exists(username))
+      throw HandleError(new Error('Username is empty'), false);
+    if (!exists(password))
+      throw HandleError(new Error('Password is empty'), false);
     const auth = await this.get(username, 'username');
     if (
       !!auth &&
@@ -24,9 +27,14 @@ class Service {
         keyName: 'username',
       });
       this.store.update({ id: auth.id, data: { ...auth, session } });
-      return sign({ username, userId: user.id, session }, { expiresIn: week });
+      return Ok({
+        token: sign(
+          { username, userId: user.id, session },
+          { expiresIn: week }
+        ),
+      });
     }
-    throw new Error('Not authenticated');
+    throw HandleError('Not authenticated', false);
   };
   get = async (id, keyName = 'id') => this.store.get({ id, keyName });
   create = async (data) => {

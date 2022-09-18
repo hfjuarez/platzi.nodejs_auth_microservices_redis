@@ -1,6 +1,6 @@
 import express from 'express';
 
-import * as response from '../../../network/response.js';
+import { HandleResponse } from '../../../network/response.js';
 import controller from './controller.js';
 import middleware from './middleware.js';
 
@@ -12,74 +12,34 @@ router.put('/:id', middleware.update, update);
 
 async function list(req, res) {
   try {
-    const data = await controller.list();
-    response.success({
-      req,
-      res,
-      message: '',
-      data,
-      status: 200,
-    });
+    const result = await controller.list();
+    return HandleResponse({ res, result });
   } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-    });
+    return HandleResponse({ res, result: error });
   }
 }
 async function get(req, res) {
   try {
-    const data = await controller.get(req.params.id);
-    response.success({
-      req,
-      res,
-      message: '',
-      data,
-      status: 200,
-    });
+    const result = await controller.get(req.params.id);
+    return HandleResponse({ res, result });
   } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-    });
+    return HandleResponse({ res, result: error });
   }
 }
 async function create(req, res) {
   try {
-    const data = await controller.create(req.body);
-    response.success({
-      req,
-      res,
-      message: '',
-      data,
-      status: 200,
-    });
+    const result = await controller.create(req.body);
+    return HandleResponse({ res, result });
   } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-    });
+    return HandleResponse({ res, result: error });
   }
 }
 async function update(req, res) {
   try {
-    const data = await controller.update(req.params.id, req.body);
-    response.success({
-      req,
-      res,
-      message: '',
-      data,
-      status: 200,
-    });
+    const result = await controller.update(req.params.id, req.body);
+    return HandleResponse({ res, result });
   } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-    });
+    return HandleResponse({ res, result: error });
   }
 }
 

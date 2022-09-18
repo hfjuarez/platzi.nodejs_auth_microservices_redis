@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import store from '../../../store/connection.js';
+import { Ok } from '../../../utils/helpers/results.js';
 import authController from '../auth/controller.js';
 
 class Service {
@@ -7,8 +8,8 @@ class Service {
     this.store = store;
     this.auth = options?.auth;
   }
-  list = () => this.store.list();
-  get = (id) => this.store.get({ id, keyName: 'id' });
+  list = async () => Ok(await this.store.list());
+  get = async (id) => Ok(await this.store.get({ id, keyName: 'id' }));
   create = async (body) => {
     if (!body.name) throw new Error('Name is empty');
     if (!body.username) throw new Error('Username is empty');
@@ -23,19 +24,23 @@ class Service {
       username: user.username,
       password: body.password,
     });
-    return await this.store.create({
-      data: user,
-    });
+    return Ok(
+      await this.store.create({
+        data: user,
+      })
+    );
   };
   update = async (id, body) => {
     if (!id && this.get(id)) throw new Error("ID doesn't exists");
     const user = {
       name: body.name,
     };
-    return this.store.update({
-      id,
-      data: user,
-    });
+    return Ok(
+      await this.store.update({
+        id,
+        data: user,
+      })
+    );
   };
 }
 

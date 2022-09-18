@@ -1,6 +1,6 @@
 import express from 'express';
 
-import * as response from '../../../network/response.js';
+import { HandleResponse } from '../../../network/response.js';
 import controller from './controller.js';
 
 const router = express.Router();
@@ -8,21 +8,10 @@ router.post('/login', login);
 
 async function login(req, res) {
   try {
-    const token = await controller.login(req.body);
-    response.success({
-      req,
-      res,
-      message: '',
-      data: token,
-      status: 200,
-    });
+    const result = await controller.login(req.body);
+    return HandleResponse({ res, result });
   } catch (error) {
-    response.error({
-      req,
-      res,
-      message: error.message,
-      status: error.message === 'Not authenticated' ? 401 : 500,
-    });
+    return HandleResponse({ res, result: error });
   }
 }
 
